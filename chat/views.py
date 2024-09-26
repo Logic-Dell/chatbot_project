@@ -37,6 +37,7 @@ for model_name in models:
         else:
             model = AutoModelForCausalLM.from_pretrained(model_name)
         loaded_models[model_name] = (tokenizer, model)
+        print(f"Successfully loaded {model_name}")
     except Exception as e:
         print(f"Error loading {model_name}: {e}")
 
@@ -53,16 +54,23 @@ def index(request):
     return render(request, 'chat/index.html', {'models_info': models_info})
 
 def generate_response(model_name, tokenizer, model, user_input):
-    start_time = time.time()
-    inputs = tokenizer(user_input, return_tensors="pt")
-    with torch.no_grad():
-        outputs = model.generate(**inputs, max_length=400)
-    bot_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    elapsed_time = time.time() - start_time
-    return model_name, {
-        'response': bot_response,
-        'time': f"{elapsed_time:.2f} seconds"
-    }
+    try:
+        start_time = time.time()
+        inputs = tokenizer(user_input, return_tensors="pt")
+        with torch.no_grad():
+            outputs = model.generate(**inputs, max_length=400)
+        bot_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        elapsed_time = time.time() - start_time
+        return model_name, {
+            'response': bot_response,
+            'time': f"{elapsed_time:.2f} seconds"
+        }
+    except Exception as e:
+        print(f"Error generating response for {model_name}: {str(e)}")
+        return model_name, {
+            'response': f'Error: {str(e)}',
+            'time': 'N/A'
+        }
 
 @csrf_exempt
 def get_response(request):
