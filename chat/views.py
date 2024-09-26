@@ -14,6 +14,7 @@ models = [
     "google/gemma-2b",
     # "mistralai/Mistral-7B-v0.1",
     "gpt2",
+    "albert/albert-base-v1",
     # "meta-llama/Llama-2-7b-chat-hf",
     # "tiiuae/falcon-7b",
     # "bigscience/bloom-1b7",
