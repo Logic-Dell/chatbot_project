@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Comparison</title>
+</head>
+<body>
+    <h1>AI Chat Comparison</h1>
+
+    <form method="post" action="{% url 'get_response' %}">
+        {% csrf_token %}
+        <input type="text" name="user_input" placeholder="Enter your message">
+        <button type="submit">Send</button>
+    </form>
+
+    {% if responses %}
+        <h2>AI Responses:</h2>
+        {% for model, data in responses.items %}
+            <h3>{{ model }}</h3>
+            <p>Response: {{ data.response }}</p>
+            <p>Time: {{ data.time }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% comment %} <h2>10 APIs:</h2> {% endcomment %}
+    {% comment %} <ul>
+    {% for model in models_info %}
+        <li>
+            <h3>{{ model.name }}</h3>
+            <p>Downloads: {{ model.downloads }}</p>
+            <p>Likes: {{ model.likes }}</p>
+        </li>
+    {% endfor %}
+    </ul> {% endcomment %}
+</body>
+</html>
