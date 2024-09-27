@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -11,19 +11,12 @@ login(token="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", add_to_git_credential=True)
 
 # List of ChatGPT-4 alternatives
 models = [
-    "google/gemma-2b",
-    # "mistralai/Mistral-7B-v0.1",
+    
     "gpt2",
     "EleutherAI/gpt-neo-125m",
-    # "albert/albert-base-v1",
-    # "meta-llama/Llama-2-7b-chat-hf",
-    # "tiiuae/falcon-7b",
-    # "bigscience/bloom-1b7",
-    # "EleutherAI/gpt-neo-1.3B",
-    # "facebook/opt-1.3b",
-    # "google/flan-t5-base",
-    # "bigscience/T0_3B",
-    # "allenai/macaw-3b"
+    "huawei-noah/TinyBERT_General_4L_312D",
+    "albert/albert-base-v2",
+    "openai-community/gpt2-medium",
 ]
 
 # Load models and tokenizers
@@ -31,12 +24,7 @@ loaded_models = {}
 for model_name in models:
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        if model_name == "google/gemma-2b":
-            config = AutoConfig.from_pretrained(model_name)
-            config.hidden_activation = "gelu_pytorch_tanh"
-            model = AutoModelForCausalLM.from_pretrained(model_name, config=config)
-        else:
-            model = AutoModelForCausalLM.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name)
         loaded_models[model_name] = (tokenizer, model)
         print(f"Successfully loaded {model_name}")
     except Exception as e:
@@ -53,7 +41,7 @@ def generate_response(model_name, tokenizer, model, user_input):
         start_time = time.time()
         inputs = tokenizer(user_input, return_tensors="pt")
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_length=400)
+            outputs = model.generate(**inputs, max_length=100)
         bot_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
         elapsed_time = time.time() - start_time
         return model_name, {
