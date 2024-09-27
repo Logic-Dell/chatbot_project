@@ -3,7 +3,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #000000;
+    background-color: #fefefe;
 }
 h1 {
     color: #333;
@@ -42,6 +42,7 @@ button:hover {
 .response h3 {
     margin-top: 0;
     color: #4CAF50;
+    font: 24px Arial, sans-serif;
 
 }
 .response p {

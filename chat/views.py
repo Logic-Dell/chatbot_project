@@ -14,7 +14,8 @@ models = [
     "google/gemma-2b",
     # "mistralai/Mistral-7B-v0.1",
     "gpt2",
-    "albert/albert-base-v1",
+    "EleutherAI/gpt-neo-125m",
+    # "albert/albert-base-v1",
     # "meta-llama/Llama-2-7b-chat-hf",
     # "tiiuae/falcon-7b",
     # "bigscience/bloom-1b7",
@@ -44,13 +45,7 @@ for model_name in models:
 def index(request):
     api = HfApi()
     models_info = []
-    for model_name in models:
-        model_info = api.model_info(model_name)
-        models_info.append({
-            'name': model_name,
-            'downloads': model_info.downloads,
-            'likes': model_info.likes
-        })
+    
     return render(request, 'chat/index.html', {'models_info': models_info})
 
 def generate_response(model_name, tokenizer, model, user_input):
